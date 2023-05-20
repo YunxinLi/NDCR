@@ -24,10 +24,10 @@ import argparse
 from torchvision import transforms
 from src_transformers.models.bart import BartTokenizer, BartForConditionalGeneration
 import sys
-sys.path.append('../../')
+#sys.path.append('../../')
 from PIL import Image
 import torch
-# from torchvision import transforms
+#from torchvision import transforms
 #from transformers.models.ofa import OFATokenizer
 from OFA.transformers.src.transformers.models.ofa.tokenization_ofa import OFATokenizer
 from OFA.transformers.src.transformers.models.ofa.modeling_ofa import OFAModel
@@ -388,8 +388,8 @@ parser.add_argument("-a", "--activation", default='relu')
 parser.add_argument("-s", "--logit_scale", default=1)
 parser.add_argument("--frozen_clip", action="store_true")
 parser.add_argument("--finetuned_checkpoint_path",
-                    default='./checkpoints/pretrain_BART_generator_coldstart_OFA.pt')
-# ./checkpoints/CONTRA_clip_best_0.2967.pt
+                    default='./Checkpoints/pretrain_BART_generator_coldstart_OFA.pt')
+
 parser.add_argument("--add_input", type=bool, default=True)
 parser.add_argument("--positional", action="store_true")
 parser.add_argument("--head_scheduler", default=0.95, type=float)
@@ -399,11 +399,11 @@ parser.add_argument("--all_pos", action="store_true")
 parser.add_argument("--test", type=bool, default=False)
 parser.add_argument('--epochs', type=int, default=30)
 # modify the data source to your own path.
-parser.add_argument('--valid_descr_path', type=str, default='../../data/valid_data.json')
-parser.add_argument('--test_descr_path', type=str, default='../../data/test_data_unlabeled.json')
-parser.add_argument('--train_descr_path', type=str, default='../../data/train_data.json')
-# modify the image source to your own path.
-parser.add_argument('--imgs_path', type=str, default='../../data/games')
+parser.add_argument('--valid_descr_path', type=str, default='./data/valid_data.json')
+parser.add_argument('--test_descr_path', type=str, default='./data/test_data_unlabeled.json')
+parser.add_argument('--train_descr_path', type=str, default='./data/train_data.json')
+# modify the image source to your own path, you can download the images according the instruction from Imagecode.
+parser.add_argument('--imgs_path', type=str, default='./data/games')
 parser.add_argument("--job_id")
 
 args = parser.parse_args()
@@ -423,6 +423,7 @@ if args.finetuned_checkpoint_path:
     checkpoint = torch.load(args.finetuned_checkpoint_path, map_location='cpu')
     if not args.test:
         contextual_clip.load_state_dict(checkpoint['model_state_dict'], False)
+        # the following code aims to load some parameters from previous checkpoints. 
         # copy_checkpoints = checkpoint['model_state_dict'].copy()
         # for n, p in copy_checkpoints.items():
         #     if 'OFA.' not in n and 'transformer_3.' not in n and 'positional_emb.' not in n and 'prediction_layer_3.' not in n:
@@ -444,11 +445,6 @@ if args.finetuned_checkpoint_path:
         # contextual_clip.load_state_dict(checkpoint['model_state_dict'], False)
     else:
         contextual_clip.load_state_dict(checkpoint['model_state_dict'])
-# for n, p in contextual_clip.clip.named_parameters():
-#     if 'resblocks.11.' in n or n in ['text_projection', 'visual.proj']:
-#         p.requires_grad = True
-#     else:
-#         p.requires_grad = False
 for n, p in contextual_clip.OFA.named_parameters():
     p.requires_grad = False
 
@@ -466,6 +462,7 @@ loss_img = nn.CrossEntropyLoss()
 loss_txt = nn.CrossEntropyLoss()
 loss_nn = nn.NLLLoss()
 loss_func = nn.MSELoss()
+# if you like, you can refine the following code to add the trainable modules.
 head_params = list(contextual_clip.prediction_layer_1.parameters()) + list(contextual_clip.prediction_layer.parameters()) \
               + list(contextual_clip.transformer_.parameters()) + list(contextual_clip.prediction_layer_4.parameters()) \
               + list(contextual_clip.prediction_layer_3.parameters()) + list(contextual_clip.transformer_symbolic.parameters()) \
@@ -497,7 +494,8 @@ best_val = 0
 args.test = False
 
 # test_data = json.load(open(args.test_descr_path, 'r'))
-# test_data_div = json.load(open('../../data/test_model_split_2.json', 'r'))
+# test_data_div = json.load(open('./data/test_model_split_2.json', 'r'))
+# If you would need the label of testing set, you can send an email to me. 
 # test_data_label = json.load(open('./results/human_labeling_test_set.json', 'r'))
 # test = []
 # for img_dir, data in test_data_label.items():
@@ -508,9 +506,9 @@ args.test = False
 if not args.test:
     # modify the data source to your own path.
     valid_data = json.load(open(args.valid_descr_path, 'r'))
-    valid_data_div = json.load(open('../../data/dev_model_split_2.json', 'r'))
+    valid_data_div = json.load(open('./data/dev_model_split_2.json', 'r'))
     train_data = json.load(open(args.train_descr_path, 'r'))
-    train_data_div = json.load(open('../../data/train_model_split_2.json', 'r'))
+    train_data_div = json.load(open('./data/train_model_split_2.json', 'r'))
     train = []
     train_group = []
     for img_dir, data in train_data.items():

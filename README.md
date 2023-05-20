@@ -21,7 +21,7 @@ git clone https://huggingface.co/OFA-Sys/OFA-large<br>
 
 ### Training
 
-python OFA_encoder_Divide_and_Conquer.py --lr 3e-5 --lr_head 4e-5 -b 32 -m ViT-B/16 -a gelu --logit_scale 1000 --add_input True --positional --frozen_clip
+`python OFA_encoder_Divide_and_Conquer.py --lr 3e-5 --lr_head 4e-5 -b 32 -m ViT-B/16 -a gelu --logit_scale 1000 --add_input True --positional --frozen_clip`
 
 
 ## Experience
@@ -29,10 +29,18 @@ python OFA_encoder_Divide_and_Conquer.py --lr 3e-5 --lr_head 4e-5 -b 32 -m ViT-B
 2. The evaluation result on the validation set may often be identical to the performance on the testing set. 
 3. Adjust the random seed in the experiments may not bring some improvement, please not focus on this point.
 4. This dataset is very challenging, especially for samples whose images are from the video source.
+5. One significant research direction is the image modeling problem for highly similar images. It will improve the performance of NDCR.
 
 ## Acknowledge
 Thanks everyone for your contributions.
 If you like our work and use it in your projects, please cite our work:
-
+```
+@article{li2023neural,
+  title={A Neural Divide-and-Conquer Reasoning Framework for Image Retrieval from Linguistically Complex Text},
+  author={Li, Yunxin and Hu, Baotian and Ding, Yunxin and Ma, Lin and Zhang, Min},
+  journal={arXiv preprint arXiv:2305.02265},
+  year={2023}
+}
+```
 
 

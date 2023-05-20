@@ -11,6 +11,8 @@ torchaudio==0.10.1+cu111,
 torchvision==0.11.2+cu111,
 transformers==4.18.0
 
+unzip src_transformers.zip to current path.
+
 2. Prepare the OFA-version Transformer<br>
 git clone --single-branch --branch feature/add_transformers https://github.com/OFA-Sys/OFA.git<br>
 pip install OFA/transformers/<br>

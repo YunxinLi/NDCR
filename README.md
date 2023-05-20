@@ -11,9 +11,9 @@ torchaudio==0.10.1+cu111,
 torchvision==0.11.2+cu111,
 transformers==4.18.0
 
-unzip src_transformers.zip to current path.
+2. unzip src_transformers.zip, volta_src.zip, CLIP.zip to the current home path. In addition, you may need download the image source from the ImageCode to the /data/game/
 
-2. Prepare the OFA-version Transformer<br>
+3. Prepare the OFA-version Transformer<br>
 git clone --single-branch --branch feature/add_transformers https://github.com/OFA-Sys/OFA.git<br>
 pip install OFA/transformers/<br>
 git clone https://huggingface.co/OFA-Sys/OFA-large<br>

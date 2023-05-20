@@ -388,7 +388,7 @@ parser.add_argument("-a", "--activation", default='relu')
 parser.add_argument("-s", "--logit_scale", default=1)
 parser.add_argument("--frozen_clip", action="store_true")
 parser.add_argument("--finetuned_checkpoint_path",
-                    default='./checkpoints/System_1_and_2_neural_calculator_end2end_OFA_training_phrase1_1_2_0.0582.pt')
+                    default='./checkpoints/pretrain_BART_generator_coldstart_OFA.pt')
 # ./checkpoints/CONTRA_clip_best_0.2967.pt
 parser.add_argument("--add_input", type=bool, default=True)
 parser.add_argument("--positional", action="store_true")
@@ -398,9 +398,11 @@ parser.add_argument("--transformer_layers", default=2, type=int)
 parser.add_argument("--all_pos", action="store_true")
 parser.add_argument("--test", type=bool, default=False)
 parser.add_argument('--epochs', type=int, default=30)
+# modify the data source to your own path.
 parser.add_argument('--valid_descr_path', type=str, default='../../data/valid_data.json')
 parser.add_argument('--test_descr_path', type=str, default='../../data/test_data_unlabeled.json')
 parser.add_argument('--train_descr_path', type=str, default='../../data/train_data.json')
+# modify the image source to your own path.
 parser.add_argument('--imgs_path', type=str, default='../../data/games')
 parser.add_argument("--job_id")
 
@@ -411,6 +413,7 @@ wandb.config.update(args)
 img_dirs = args.imgs_path
 device = "cuda:1" if torch.cuda.is_available() else "cpu"
 print(f'DEVICE USED: {device}')
+# modify the OFA source to your own path.
 OFA_tokenizer = OFATokenizer.from_pretrained('../../OFA-large/')
 tokenizer = BartTokenizer.from_pretrained('./bart_base_checkpoints')
 bart_model = BartForConditionalGeneration.from_pretrained('./bart_base_checkpoints')
@@ -503,6 +506,7 @@ args.test = False
 # print('Total number of Test: ', len(test))
 
 if not args.test:
+    # modify the data source to your own path.
     valid_data = json.load(open(args.valid_descr_path, 'r'))
     valid_data_div = json.load(open('../../data/dev_model_split_2.json', 'r'))
     train_data = json.load(open(args.train_descr_path, 'r'))
@@ -738,7 +742,6 @@ if not args.test:
                 contextual_clip(images, text, pos_mask, None, str(img_dir), text_=None, input_ids=input_ids)
             ground_truth = torch.tensor([img_idx]).long().to(device)
             loss_init = loss_txt(logits, ground_truth)
-
             logits_softmax = F.softmax(p_condition_single, dim=-1)
             l = torch.nn.KLDivLoss(reduction='batchmean')
             loss_pc_neg = max(0.2 - l(logits_softmax.log(), F.softmax(img_text[:-2].detach() / 0.25, dim=-1)), 0.0)

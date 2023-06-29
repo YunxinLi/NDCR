@@ -1,4 +1,9 @@
 # NDCR
+<p> 
+  <a href="https://scholar.google.com/citations?user=U98QY0QAAAAJ&hl=en"><img src="https://img.shields.io/badge/scholar-4385FE.svg?&style=plastic&logo=google-scholar&logoColor=white" alt="Google Scholar" height="18px"> </a>
+  <a href="https://twitter.com/LyxTg"> <img src="https://img.shields.io/badge/Twitter-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white" height="18px" alt="Yunxin Li">
+</p> 
+
 Our paper ["A Neural Divide-and-Conquer Reasoning Framework for Image Retrieval from Linguistically Complex Text"](https://arxiv.org/abs/2305.02265) have been accepted to ACL 2023.
 This project aims to introduce the divide-and-conquer and neural-symbolic reasoning appraoches to handle the complex text-image reasoning problem.
 
